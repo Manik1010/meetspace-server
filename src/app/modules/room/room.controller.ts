@@ -45,17 +45,115 @@ const createRoom = async (req: Request, res: Response) => {
     }
 };
 
+const getAllRooms = async (req: Request, res: Response) => {
+    try {
+        const searchTerm = req.query.searchTerm as string | undefined;
+        const rooms = await RoomServices.getAllRoomIntoDB(searchTerm);
+
+        res.status(200).json({
+            success: true,
+            message: 'Rooms fetched successfully.',
+            data: rooms,
+        });
+    } catch (err: unknown) {
+        console.error('Error in getAllRooms controller:', err);
+        if (err instanceof Error) {
+            res.status(500).json({
+                success: false,
+                message: 'An error occurred while fetching rooms.',
+                error: err.message,
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'An unknown error occurred.',
+                error: 'Unknown error',
+            });
+        }
+    }
+};
+
+
 const getSingleRoom = async (req: Request, res: Response) => {
     try {
         const { roomId } = req.params;
-        // console.log(roomId);
-        const result = await RoomServices.getSingleRoomIntoDB(roomId)
+        const result = await RoomServices.getSingleRoomIntoDB(roomId);
         if (result) {
             res.status(200).json({
                 success: true,
-                message: "room fetched successfully!",
+                message: "Room fetched successfully!",
                 data: result
-            })
+            });
+        } else {
+            res.status(404).json({
+                success: false,
+                message: "Room not found!"
+            });
+        }
+    } catch (err: unknown) {
+        console.error('Error in getSingleRoom controller:', err);
+        if (err instanceof Error) {
+            res.status(500).json({
+                success: false,
+                message: err.message || "Something went wrong",
+                error: err.message
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: "Something went wrong",
+                error: 'Unknown error'
+            });
+        }
+    }
+};
+
+const updateRoom = async (req: Request, res: Response) => {
+    try {
+        const { roomId } = req.params;
+        const updatedData = req.body;
+
+        const result = await RoomServices.updateRoomIntoDB(roomId, updatedData);
+
+        if (result) {
+            res.status(200).json({
+                success: true,
+                message: 'Room updated successfully!',
+                data: result
+            });
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'Room not found!'
+            });
+        }
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            res.status(500).json({
+                success: false,
+                message: err.message || 'Something went wrong',
+                error: err.message
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'Something went wrong',
+                error: 'Unknown error'
+            });
+        }
+    }
+};
+
+const deleteSingleRoom = async (req: Request, res: Response) => {
+    try {
+        const { roomId } = req.params;
+        const result = await RoomServices.deleteRoomIntoDB(roomId)
+        if (result.deletedCount > 0) {
+            res.status(200).json({
+                success: true,
+                message: "room deleted successfully!",
+                data: null
+            });
         } else {
             res.status(404).json({
                 success: false,
@@ -80,7 +178,12 @@ const getSingleRoom = async (req: Request, res: Response) => {
     }
 }
 
+
 export const RoomControllers = {
     createRoom,
+    getAllRooms,
     getSingleRoom,
+    updateRoom,
+    deleteSingleRoom,
+    
 };
