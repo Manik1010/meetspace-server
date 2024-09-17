@@ -3,6 +3,6 @@ import { RoomControllers } from './room.controller'; // Properly import controll
 
 const router = express.Router();
 
-router.post('/create-room', RoomControllers.createRoom);
+router.post('', RoomControllers.createRoom);
 
 export const RoomIRoutes = router;
