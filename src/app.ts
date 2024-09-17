@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-import { ProductRoutes } from './app/modules/product/product.route';
-import { OrderRoutes } from './app/modules/order/order.route';
+import { RoomIRoutes } from './app/modules/room/room.router';
+
 
 
 const app: Application = express();
@@ -11,13 +11,12 @@ app.use(express.json());
 app.use(cors());
 
 // Application routes
-// app.use('/api/products', ProductRoutes);
-// app.use('/api/orders', OrderRoutes)
+app.use('/api/rooms', RoomIRoutes)
 
-const getProduct = (req: Request, res: Response) => {
-    res.send('Hello World next');
+const getRoom = (req: Request, res: Response) => {
+    res.send('Hello World meetspace-server');
 };
 
-app.get('/', getProduct);
+app.get('/', getRoom);
 
 export default app;
