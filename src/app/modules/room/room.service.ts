@@ -1,5 +1,6 @@
 import TRoom from "./room.interface";
 import RoomModel from "./room.model";
+import { isValidObjectId } from "mongoose";
 
 const createRoomIntoDB = async (room: TRoom) => {
     try {
@@ -15,7 +16,17 @@ const createRoomIntoDB = async (room: TRoom) => {
         }
     }
 };
+
+const getSingleRoomIntoDB = async (id: string) => {
+    if (!isValidObjectId(id)) {
+        throw new Error("Invalid Room ID");
+    }
+    const result = await RoomModel.findOne({ _id: id });
+    return result;
+};
+
 export const RoomServices = {
     createRoomIntoDB,
+    getSingleRoomIntoDB,
 
 };
