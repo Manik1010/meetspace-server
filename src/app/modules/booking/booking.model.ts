@@ -1,42 +1,32 @@
 import { Schema, model } from "mongoose";
 import { Types } from "mongoose";
-import TBooking from "./booking.interface";
+import TSlot from "../slot/slot.interface";
 
-// Create and export the Booking model
-const bookingSchema = new Schema<TBooking>({
+// Create and export the Slot model
+const slotSchema = new Schema<TSlot>({
     room: {
         type: Schema.Types.ObjectId,
         ref: 'Room',
         required: [true, "Room is required"]
     },
-    slots: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Slot',
-        required: [true, "At least one slot is required"]
-    }],
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, "User is required"]
-    },
     date: {
         type: Date,
         required: [true, "Booking date is required"]
     },
-    totalAmount: {
-        type: Number,
-        required: [true, "Total amount is required"]
+    startTime: {
+        type: String,
+        required: [true, "Start time is required"]
     },
-    isConfirmed: {
+    endTime: {
+        type: String,
+        required: [true, "End time is required"]
+    },
+    isBooked: {
         type: Boolean,
         default: false,
-        required: [true, "Booking confirmation status is required"]
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false
+        required: [true, "Booking status is required"]
     }
 });
 
-const BookingModel = model<TBooking>("Booking", bookingSchema);
-export default BookingModel;
+const SlotModel = model<TSlot>("Slot", slotSchema);
+export default SlotModel;
